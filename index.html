@@ -381,6 +381,15 @@
 			content: "";
 		}
 
+		body.light-mode .profile-section h2,
+		body.light-mode .link-section h2,
+		body.light-mode .mutual-section h2 {
+			background: linear-gradient(135deg, #10151f, #176b87 52%, #176b87 100%);
+			-webkit-background-clip: text;
+			background-clip: text;
+			color: transparent;
+		}
+
 		.link-grid {
 			display: grid;
 			grid-template-columns: 1fr;
@@ -622,7 +631,17 @@
 		const profileContent = document.querySelector(".profile-section__content");
 		const linkContent = document.querySelector(".link-section__content");
 		const mutualContent = document.querySelector(".mutual-section__content");
+		const colorSchemeQuery = window.matchMedia("(prefers-color-scheme: light)");
 		let pointerFrame;
+
+		const applyTheme = (isLight) => {
+			document.body.classList.toggle("light-mode", isLight);
+			themeToggle.setAttribute("aria-pressed", String(isLight));
+			themeToggle.textContent = isLight ? "◐ ダークモード" : "☀ ライトモード";
+		};
+
+		applyTheme(colorSchemeQuery.matches);
+		colorSchemeQuery.addEventListener("change", (event) => applyTheme(event.matches));
 
 		document.addEventListener("pointermove", (event) => {
 			if (pointerFrame) return;
@@ -634,9 +653,7 @@
 		});
 
 		themeToggle.addEventListener("click", () => {
-			const isLight = document.body.classList.toggle("light-mode");
-				themeToggle.setAttribute("aria-pressed", String(isLight));
-				themeToggle.textContent = isLight ? "◐ ダークモード" : "☀ ライトモード";
+			applyTheme(!document.body.classList.contains("light-mode"));
 		});
 
 		const profileObserver = new IntersectionObserver((entries, observer) => {
