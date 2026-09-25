@@ -1,0 +1,655 @@
+<!doctype html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Pikuaoのホームページ</title>
+	<meta name="description" content="ガジェットが好きな中学生のサイトです。">
+	<link rel="icon" type="image/png" href="2.png">
+	<style>
+		:root {
+			color-scheme: dark;
+			--bg: #05070b;
+			--text: #f8fafc;
+			--muted: #9aa2b1;
+			--line: #d9dee8;
+			--panel: rgba(19, 25, 38, .72);
+			--accent: #8be9fd;
+			--accent-soft: rgba(139, 233, 253, .16);
+			--pointer-x: 50%;
+			--pointer-y: 50%;
+		}
+
+		* { box-sizing: border-box; }
+
+		html {
+			scroll-behavior: smooth;
+			scroll-snap-type: y proximity;
+		}
+
+		body {
+			min-width: 320px;
+			margin: 0;
+			overflow-x: hidden;
+			background:
+				radial-gradient(circle at 12% 18%, rgba(106, 190, 255, .24), transparent 20%),
+				radial-gradient(circle at 80% 70%, rgba(144, 247, 202, .18), transparent 26%),
+				radial-gradient(circle at 50% 24%, rgba(137, 97, 255, .2), transparent 24%),
+				ranial-gradient(circle at 50% 50%, rgba(255,255,255,.035), transparent 48%),
+				linear-gradient(145deg, rgba(2, 5, 10, .96), rgba(9, 16, 24, .82) 36%, rgba(15, 20, 28, .94));
+			background-attachment: fixed;
+			color: var(--text);
+			font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+		}
+
+		body.light-mode {
+			--bg: #f4f7fb;
+			--text: #10151f;
+			--muted: #536071;
+			--line: #1d2735;
+			--panel: rgba(255, 255, 255, .82);
+			--accent: #176b87;
+			--accent-soft: rgba(23, 107, 135, .12);
+			color-scheme: light;
+			background:
+				radial-gradient(circle at 10% 18%, rgba(76, 201, 240, .13), transparent 24%),
+				radial-gradient(circle at 88% 82%, rgba(52, 211, 153, .1), transparent 27%),
+				radial-gradient(circle at 50% 22%, rgba(125, 211, 252, .2), transparent 28%),
+				linear-gradient(145deg, #eef5fb 0%, var(--bg) 52%, #dce8f2 100%);
+		}
+
+		.preference-controls {
+			position: fixed;
+			top: 20px;
+			right: 20px;
+			z-index: 2;
+			display: flex;
+			gap: 8px;
+			flex-wrap: wrap;
+		}
+
+		.preference-button {
+			min-height: 40px;
+			padding: 8px 14px;
+			border: 1px solid rgba(255, 255, 255, .16);
+			border-radius: 999px;
+			background: rgba(15, 19, 27, .32);
+			backdrop-filter: blur(18px) saturate(1.5);
+			-webkit-backdrop-filter: blur(18px) saturate(1.5);
+			box-shadow: 0 10px 28px rgba(0, 0, 0, .24), inset 0 1px 0 rgba(255,255,255,.08), 0 0 0 1px rgba(255,255,255,.02);
+			color: var(--text);
+			font: inherit;
+			font-size: .8rem;
+			font-weight: 700;
+			cursor: pointer;
+			transition: transform .2s ease, background .2s ease, color .2s ease, box-shadow .2s ease;
+		}
+
+		.preference-button:hover,
+		.preference-button:focus-visible {
+			transform: translateY(-2px);
+			box-shadow: 0 14px 36px rgba(0, 0, 0, .28), 0 0 0 1px rgba(139, 233, 253, .18);
+			outline: 2px solid var(--line);
+			outline-offset: 2px;
+		}
+
+		.preference-button[aria-pressed="true"] {
+			background: var(--line);
+			color: var(--bg);
+		}
+
+		body::before,
+		body::after {
+			position: fixed;
+			z-index: -1;
+			content: "";
+			pointer-events: none;
+			border-radius: 50%;
+			filter: blur(80px);
+		}
+
+		body::before {
+			top: -180px;
+			left: -100px;
+			width: 480px;
+			height: 380px;
+			background: rgba(32, 38, 54, .14);
+		}
+
+		body::after {
+			right: -120px;
+			bottom: -180px;
+			width: 650px;
+			height: 520px;
+			background:
+				radial-gradient(circle at var(--pointer-x) var(--pointer-y), rgba(139, 233, 253, .1), transparent 28%),
+				rgba(43, 55, 79, .35);
+		}
+
+		body.light-mode::before { background: rgba(142, 174, 215, .2); }
+		body.light-mode::after {
+			background:
+				radial-gradient(circle at var(--pointer-x) var(--pointer-y), rgba(23, 107, 135, .1), transparent 28%),
+				rgba(176, 198, 226, .32);
+		}
+
+		.hero {
+			display: grid;
+			min-height: 100svh;
+			place-items: center;
+			padding: 48px 24px 92px;
+			text-align: center;
+			position: relative;
+			scroll-snap-align: start;
+		}
+
+		.hero::after {
+			position: absolute;
+			bottom: 42px;
+			left: 50%;
+			width: 1px;
+			height: 56px;
+			background: linear-gradient(var(--accent), transparent);
+			content: "";
+			opacity: .72;
+		}
+
+		.hero__content {
+			width: min(100%, 740px);
+			animation: enter .8s ease both;
+		}
+
+		.profile-icon-frame {
+			position: relative;
+			width: 168px;
+			height: 168px;
+			margin: 0 auto 32px;
+			border: 1px solid rgba(255,255,255,.25);
+			border-radius: 50%;
+			background: linear-gradient(135deg, rgba(20, 28, 42, .82), rgba(10, 14, 22, .94));
+			box-shadow: 0 22px 52px rgba(0, 0, 0, .38), 0 0 30px rgba(139, 233, 253, .15), inset 0 0 0 7px rgba(255,255,255,.03);
+			overflow: hidden;
+			animation: float-icon 5s ease-in-out infinite;
+		}
+
+		.profile-icon-frame img {
+			display: block;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+
+		h1 {
+			margin: 0;
+			font-family: "Arial Black", "Yu Gothic", sans-serif;
+			font-size: clamp(3.7rem, 7.5vw, 5.8rem);
+			line-height: .98;
+			letter-spacing: -0.055em;
+			text-shadow: 0 0 38px rgba(139, 233, 253, .12);
+		}
+
+		.tagline {
+			margin: 28px 0 46px;
+			color: var(--muted);
+			font-size: clamp(1.1rem, 2.2vw, 1.25rem);
+			font-weight: 700;
+			letter-spacing: .02em;
+		}
+
+		.scroll-hint {
+			display: block;
+			margin-top: 42px;
+			color: var(--accent);
+			font-size: .68rem;
+			font-weight: 700;
+			letter-spacing: .28em;
+			opacity: .72;
+		}
+
+		.profile-section {
+			display: grid;
+			min-height: 100svh;
+			place-items: center;
+			padding: 72px 24px;
+			position: relative;
+			scroll-snap-align: start;
+		}
+
+		.profile-section::before {
+			position: absolute;
+			top: 0;
+			left: 50%;
+			width: min(100% - 48px, 900px);
+			height: 1px;
+			background: linear-gradient(90deg, transparent, var(--accent), transparent);
+			content: "";
+			opacity: .55;
+			transform: translateX(-50%);
+		}
+
+		.profile-section__content {
+			position: relative;
+			width: min(100%, 1100px);
+			text-align: center;
+			opacity: 0;
+			transform: translateY(28px) scale(.98);
+			transition: opacity .75s ease, transform .35s ease;
+		}
+
+		.profile-section__content.is-visible {
+			opacity: 1;
+			transform: translateY(0) scale(1);
+		}
+
+		@media (hover: hover) {
+			.profile-section__content:hover {
+				transform: translateY(-8px) scale(1.012);
+			}
+		}
+
+		.profile-section h2 {
+			margin: 0 0 26px;
+			font-size: clamp(2.3rem, 5vw, 3.4rem);
+			background: linear-gradient(135deg, var(--text), #adf0ff 52%, #c7f9cc 100%);
+			-webkit-background-clip: text;
+			background-clip: text;
+			color: transparent;
+		}
+
+		.profile-section h2::after {
+			display: block;
+			width: 72px;
+			height: 3px;
+			margin: 16px auto 0;
+			border-radius: 999px;
+			background: linear-gradient(90deg, var(--accent), #a7f3d0);
+			content: "";
+		}
+
+		.profile-grid {
+			display: grid;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 28px;
+			margin-top: 54px;
+		}
+
+		.profile-card {
+			min-height: 220px;
+			padding: 34px 40px;
+			border: 1px solid rgba(255, 255, 255, .15);
+			border-radius: 30px;
+			background: rgba(17, 24, 35, .42);
+			backdrop-filter: blur(24px) saturate(1.4);
+			-webkit-backdrop-filter: blur(24px) saturate(1.4);
+			box-shadow: 0 24px 52px rgba(0, 0, 0, .24), inset 0 1px 0 rgba(255,255,255,.08), inset 0 -1px 0 rgba(255,255,255,.02);
+			text-align: left;
+			transition: transform .35s ease, border-color .35s ease, box-shadow .35s ease;
+		}
+
+		body.light-mode .profile-card { background: rgba(255, 255, 255, .72); }
+
+		.profile-card h3 {
+			margin: 0 0 24px;
+			font-size: 1.4rem;
+		}
+
+		.profile-card ul {
+			margin: 0;
+			padding-left: 24px;
+			color: var(--muted);
+			font-size: 1.05rem;
+			font-weight: 700;
+			line-height: 2;
+		}
+
+		.profile-card li::marker { color: var(--accent); }
+
+		.profile-card:hover {
+			border-color: rgba(139, 233, 253, .7);
+			box-shadow: 0 30px 72px rgba(0, 0, 0, .3), 0 0 36px rgba(139, 233, 253, .12);
+			transform: translateY(-8px);
+		}
+
+		.profile-section p {
+			margin: 10px 0;
+			color: var(--muted);
+			font-size: clamp(.62rem, 2.8vw, 1.35rem);
+			font-weight: 700;
+			line-height: 1.8;
+			white-space: nowrap;
+		}
+
+		.profile-section strong { color: var(--text); }
+
+		.profile-section p:last-child {
+			max-width: 620px;
+			margin-right: auto;
+			margin-left: auto;
+		}
+
+		.link-section {
+			display: grid;
+			min-height: 100svh;
+			place-items: center;
+			padding: 72px 24px 96px;
+			position: relative;
+			scroll-snap-align: start;
+		}
+
+		.mutual-section {
+			display: grid;
+			min-height: 100svh;
+			place-items: center;
+			padding: 72px 24px 96px;
+			position: relative;
+			scroll-snap-align: start;
+		}
+
+		.link-section__content,
+		.mutual-section__content {
+			width: min(100%, 980px);
+			text-align: center;
+			opacity: 0;
+			transform: translateY(28px) scale(.98);
+			transition: opacity .75s ease, transform .35s ease;
+		}
+
+		.link-section__content.is-visible,
+		.mutual-section__content.is-visible {
+			opacity: 1;
+			transform: translateY(0) scale(1);
+		}
+
+		.link-section h2,
+		.mutual-section h2 {
+			margin: 0 0 26px;
+			font-size: clamp(2.3rem, 5vw, 3.4rem);
+			background: linear-gradient(135deg, var(--text), #adf0ff 52%, #c7f9cc 100%);
+			-webkit-background-clip: text;
+			background-clip: text;
+			color: transparent;
+		}
+
+		.link-section h2::after,
+		.mutual-section h2::after {
+			display: block;
+			width: 72px;
+			height: 3px;
+			margin: 16px auto 0;
+			border-radius: 999px;
+			background: linear-gradient(90deg, var(--accent), #a7f3d0);
+			content: "";
+		}
+
+		.link-grid {
+			display: grid;
+			grid-template-columns: 1fr;
+			gap: 18px;
+			margin-top: 54px;
+			width: min(100%, 700px);
+			margin-inline: auto;
+		}
+
+		.mutual-link-grid {
+			display: grid;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 28px;
+			margin-top: 54px;
+			width: min(100%, 960px);
+			margin-inline: auto;
+		}
+
+		.link-card {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 16px;
+			padding: 18px 20px;
+			border: 1px solid rgba(255, 255, 255, .15);
+			border-radius: 22px;
+			background: rgba(17, 24, 35, .38);
+			backdrop-filter: blur(22px) saturate(1.4);
+			-webkit-backdrop-filter: blur(22px) saturate(1.4);
+			box-shadow: 0 18px 48px rgba(0, 0, 0, .18), inset 0 1px 0 rgba(255,255,255,.08), inset 0 -1px 0 rgba(255,255,255,.02), 0 0 0 1px rgba(255,255,255,.02);
+			color: var(--text);
+			text-decoration: none;
+			font-weight: 700;
+			text-align: center;
+			transition: transform .35s ease, border-color .35s ease, box-shadow .35s ease;
+			animation: linkFloat 5s ease-in-out infinite;
+		}
+
+		.link-section .link-card {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			gap: 6px;
+			padding: 18px 16px;
+			min-height: 96px;
+		}
+
+		.mutual-section .link-card {
+			flex-direction: column;
+			gap: 12px;
+		}
+
+		.link-card__icon {
+			flex-shrink: 0;
+			width: 72px;
+			height: 72px;
+			border-radius: 50%;
+			overflow: hidden;
+			border: 1px solid rgba(255, 255, 255, .12);
+			background: linear-gradient(135deg, rgba(139, 233, 253, .16), rgba(167, 243, 208, .12));
+			box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+		}
+
+		.link-card__icon img {
+			display: block;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+
+		.link-card__content {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			min-width: 0;
+			flex: 1;
+			text-align: center;
+		}
+
+		body.light-mode .link-card { background: rgba(255, 255, 255, .72); }
+
+		.link-card:hover,
+		.link-card:focus-visible {
+			border-color: rgba(139, 233, 253, .8);
+			box-shadow: 0 28px 70px rgba(0, 0, 0, .26), 0 0 36px rgba(139, 233, 253, .12), inset 0 1px 0 rgba(255,255,255,.08);
+			transform: translateY(-6px) scale(1.012);
+			outline: none;
+		}
+
+		.link-card .link-label {
+			display: block;
+			font-size: 1.1rem;
+			line-height: 1.4;
+		}
+
+		.link-card .link-sub {
+			display: block;
+			color: var(--muted);
+			font-size: .9rem;
+			line-height: 1.5;
+		}
+
+		.disabled-link-card {
+			filter: saturate(.8);
+			opacity: .9;
+		}
+
+		.disabled-link-card:hover,
+		.disabled-link-card:focus-visible {
+			transform: translateY(0);
+			border-color: rgba(217, 222, 232, .2);
+			box-shadow: 0 18px 48px rgba(0, 0, 0, .2);
+		}
+
+		@keyframes enter {
+			from { opacity: 0; transform: translateY(18px); }
+			to { opacity: 1; transform: translateY(0); }
+		}
+
+		@keyframes float-icon {
+			0%, 100% { transform: translateY(0); }
+			50% { transform: translateY(-8px); }
+		}
+
+		@keyframes profile-glow {
+			0%, 100% { background-position: 0 0, 0% 50%; }
+			50% { background-position: 0 0, 100% 50%; }
+		}
+
+		@keyframes linkFloat {
+			0%, 100% { transform: translateY(0); }
+			50% { transform: translateY(-4px); }
+		}
+
+		@media (max-width: 620px) {
+			.hero { padding: 32px 20px 76px; }
+			.profile-icon-frame { width: 140px; height: 140px; margin-bottom: 28px; }
+			h1 { font-size: clamp(3.2rem, 15vw, 4.5rem); }
+			.tagline { margin: 24px 0 36px; font-size: 1.05rem; }
+			.profile-section { padding: 48px 20px; }
+			.profile-grid { grid-template-columns: 1fr; gap: 18px; margin-top: 36px; }
+			.profile-card { min-height: 0; padding: 28px 24px; }
+			.link-section,
+			.mutual-section { padding: 48px 20px 64px; }
+			.link-grid { grid-template-columns: 1fr; gap: 18px; margin-top: 36px; width: 100%; }
+			.mutual-link-grid { grid-template-columns: 1fr; gap: 18px; margin-top: 36px; width: 100%; }
+			.scroll-hint { margin-top: 34px; font-size: .6rem; }
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			html { scroll-behavior: auto; scroll-snap-type: none; }
+			*, *::before, *::after {
+				animation-duration: .01ms !important;
+				transition-duration: .01ms !important;
+			}
+			.profile-section__content { opacity: 1; transform: none; }
+		}
+
+		.site-footer {
+			padding: 28px 20px 36px;
+			text-align: center;
+			color: var(--muted);
+			font-size: .9rem;
+			letter-spacing: .04em;
+			border-top: 1px solid rgba(255,255,255,.06);
+			background: rgba(8, 12, 18, .22);
+			backdrop-filter: blur(8px);
+		}
+	</style>
+</head>
+<body>
+	<div class="preference-controls" aria-label="表示設定">
+		<button class="preference-button" id="theme-toggle" type="button" aria-pressed="false">☀ ライトモード</button>
+	</div>
+	<main>
+		<section class="hero" aria-labelledby="site-title">
+			<div class="hero__content">
+				<div class="profile-icon-frame">
+					<img src="1.png" alt="Pikuaoのアイコン">
+				</div>
+				<h1 id="site-title">Pikuao</h1>
+				<p class="tagline">ガジェットが好きな中学生！</p>
+				<span class="scroll-hint" aria-hidden="true">SCROLL TO EXPLORE ↓</span>
+			</div>
+		</section>
+
+		<section class="profile-section" aria-labelledby="profile-title">
+			<div class="profile-section__content">
+				<h2 id="profile-title">Profile</h2>
+				<div class="profile-grid">
+					<article class="profile-card">
+						<h3>どんな人～？</h3>
+						<ul>
+							<li>Pikuaoって言います！</li>
+							<li>中学生（来年から高校生）</li>
+							<li>ガジェットと車関連が好き！</li>
+						</ul>
+					</article>
+					<article class="profile-card">
+						<h3>最近の趣味</h3>
+						<ul>
+							<li>マインクラフト</li>
+							<li>ガジェットを買うこと！</li>
+						</ul>
+					</article>
+				</div>
+			</div>
+		</section>
+
+		<section class="link-section" aria-labelledby="links-title">
+			<div class="link-section__content">
+				<h2 id="links-title">My link</h2>
+				<div class="link-grid">
+					<a class="link-card" href="https://x.com/pikuao2525" target="_blank" rel="noreferrer"><span class="link-label">X</span><span class="link-sub">@pikuao2525</span></a>
+					<a class="link-card" href="https://x.com/pikuao202608" target="_blank" rel="noreferrer"><span class="link-label">X（サブ垢）</span><span class="link-sub">@pikuao202608</span></a>
+					<a class="link-card" href="https://karotter.com/profile/pikuao202606?tab=recommended" target="_blank" rel="noreferrer"><span class="link-label">karotter</span><span class="link-sub">（あんまり動かしません）</span></a>
+					<div class="link-card disabled-link-card" aria-disabled="true" tabindex="-1" role="link" style="cursor: default; pointer-events: none; opacity: .9;"><span class="link-label">discord</span><span class="link-sub">@pikuao2525で追加してね！</span></div>
+				</div>
+			</div>
+		</section>
+
+		<section class="mutual-section" aria-labelledby="mutual-title">
+			<div class="mutual-section__content">
+				<h2 id="mutual-title">Mutual Links</h2>
+				<div class="mutual-link-grid">
+					<a class="link-card" href="https://linker.sakulab.net/" target="_blank" rel="noreferrer"><span class="link-card__icon"><img src="3.png" alt="Sakuのアイコン"></span><span class="link-card__content"><span class="link-label">Saku</span><span class="link-sub">ガジェットとWeb制作が好きの学生！</span></span></a>
+					<a class="link-card" href="https://example.com" target="_blank" rel="noreferrer"><span class="link-card__content"><span class="link-label">Mutual Link</span><span class="link-sub">相互リンク募集中</span></span></a>
+				</div>
+			</div>
+		</section>
+	</main>
+	<footer class="site-footer">
+		© 2026 Pikuao. All rights reserved.
+	</footer>
+	<script>
+		const themeToggle = document.querySelector("#theme-toggle");
+		const profileContent = document.querySelector(".profile-section__content");
+		const linkContent = document.querySelector(".link-section__content");
+		const mutualContent = document.querySelector(".mutual-section__content");
+		let pointerFrame;
+
+		document.addEventListener("pointermove", (event) => {
+			if (pointerFrame) return;
+			pointerFrame = requestAnimationFrame(() => {
+				document.body.style.setProperty("--pointer-x", `${event.clientX}px`);
+				document.body.style.setProperty("--pointer-y", `${event.clientY}px`);
+				pointerFrame = null;
+			});
+		});
+
+		themeToggle.addEventListener("click", () => {
+			const isLight = document.body.classList.toggle("light-mode");
+				themeToggle.setAttribute("aria-pressed", String(isLight));
+				themeToggle.textContent = isLight ? "◐ ダークモード" : "☀ ライトモード";
+		});
+
+		const profileObserver = new IntersectionObserver((entries, observer) => {
+			entries.forEach((entry) => {
+				if (!entry.isIntersecting) return;
+				entry.target.classList.add("is-visible");
+				observer.unobserve(entry.target);
+			});
+		}, { threshold: .2 });
+
+		profileObserver.observe(profileContent);
+		if (linkContent) profileObserver.observe(linkContent);
+		if (mutualContent) profileObserver.observe(mutualContent);
+	</script>
+</body>
+</html>
