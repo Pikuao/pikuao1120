@@ -930,6 +930,117 @@
 			.link-card:hover,
 			.link-card:focus-visible { transform: none; }
 		}
+
+		.secret-overlay[hidden] { display: none; }
+
+		.secret-overlay {
+			position: fixed;
+			inset: 0;
+			z-index: 10;
+			display: grid;
+			place-items: center;
+			overflow: hidden;
+			padding: 24px;
+			background:
+				radial-gradient(circle at 50% 45%, rgba(35, 101, 139, .42), transparent 38%),
+				rgba(4, 8, 15, .96);
+			color: #f8fafc;
+		}
+
+		.secret-overlay::before,
+		.secret-overlay::after {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			width: min(72vw, 560px);
+			aspect-ratio: 1;
+			border: 1px solid rgba(112, 244, 227, .28);
+			border-radius: 50%;
+			content: "";
+			pointer-events: none;
+			transform: translate(-50%, -50%);
+		}
+
+		.secret-overlay::before { animation: secret-orbit 12s linear infinite; }
+		.secret-overlay::after {
+			width: min(56vw, 420px);
+			border-color: rgba(139, 180, 255, .25);
+			animation: secret-orbit 9s linear infinite reverse;
+		}
+
+		.secret-overlay__panel {
+			position: relative;
+			z-index: 1;
+			width: min(100%, 560px);
+			padding: clamp(32px, 7vw, 64px) 28px;
+			border: 1px solid rgba(112, 244, 227, .38);
+			border-radius: 24px;
+			background: linear-gradient(145deg, rgba(16, 29, 46, .96), rgba(8, 15, 26, .94));
+			box-shadow: 0 0 80px rgba(112, 244, 227, .15), 0 32px 100px rgba(0, 0, 0, .48);
+			text-align: center;
+		}
+
+		.secret-overlay.is-active .secret-overlay__panel {
+			animation: secret-reveal .7s cubic-bezier(.2, .8, .2, 1) both;
+		}
+
+		.secret-overlay__eyebrow {
+			margin: 0 0 16px;
+			color: var(--accent);
+			font-family: "Consolas", "Yu Gothic", monospace;
+			font-size: .75rem;
+			font-weight: 700;
+			letter-spacing: .24em;
+		}
+
+		.secret-overlay__title {
+			margin: 0;
+			color: #f8fafc;
+			font-size: clamp(2.4rem, 9vw, 4.4rem);
+			letter-spacing: -.06em;
+			text-shadow: 0 0 34px rgba(112, 244, 227, .35);
+		}
+
+		.secret-overlay__message {
+			margin: 18px 0 28px;
+			color: #b9c9dc;
+			font-size: 1.05rem;
+		}
+
+		.secret-overlay__close {
+			min-height: 42px;
+			padding: 9px 18px;
+			border: 1px solid rgba(112, 244, 227, .5);
+			border-radius: 999px;
+			background: rgba(112, 244, 227, .1);
+			color: #f8fafc;
+			font: inherit;
+			font-size: .85rem;
+			font-weight: 700;
+			cursor: pointer;
+		}
+
+		.secret-overlay__close:hover,
+		.secret-overlay__close:focus-visible {
+			outline: 2px solid #70f4e3;
+			outline-offset: 3px;
+		}
+
+		@keyframes secret-orbit {
+			from { transform: translate(-50%, -50%) rotate(0deg) scaleX(.78); }
+			to { transform: translate(-50%, -50%) rotate(360deg) scaleX(.78); }
+		}
+
+		@keyframes secret-reveal {
+			from { opacity: 0; transform: translateY(24px) scale(.92); }
+			to { opacity: 1; transform: translateY(0) scale(1); }
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			.secret-overlay::before,
+			.secret-overlay::after,
+			.secret-overlay.is-active .secret-overlay__panel { animation: none; }
+		}
 	</style>
 </head>
 <body>
@@ -998,12 +1109,26 @@
 	<footer class="site-footer">
 		© 2026 Pikuao. All rights reserved.
 	</footer>
+	<div class="secret-overlay" id="secret-overlay" role="dialog" aria-modal="true" aria-labelledby="secret-title" aria-describedby="secret-message" hidden>
+		<div class="secret-overlay__panel">
+			<p class="secret-overlay__eyebrow">HIDDEN SIGNAL FOUND</p>
+			<h2 class="secret-overlay__title" id="secret-title">Pikuao!</h2>
+			<p class="secret-overlay__message" id="secret-message">隠しコマンドを見つけたね！<br>これからもよろしく！</p>
+			<button class="secret-overlay__close" id="secret-close" type="button">閉じる</button>
+		</div>
+	</div>
 	<script>
 		const themeToggle = document.querySelector("#theme-toggle");
 		const profileContent = document.querySelector(".profile-section__content");
 		const linkContent = document.querySelector(".link-section__content");
 		const mutualContent = document.querySelector(".mutual-section__content");
+		const secretOverlay = document.querySelector("#secret-overlay");
+		const secretClose = document.querySelector("#secret-close");
 		const colorSchemeQuery = window.matchMedia("(prefers-color-scheme: light)");
+		const secretSequence = "pikuao";
+		let secretSequencePosition = 0;
+		let secretOverlayTimeout;
+		let previouslyFocusedElement;
 		let pointerFrame;
 		let hasUserThemePreference = false;
 
@@ -1031,6 +1156,52 @@
 			hasUserThemePreference = true;
 			applyTheme(!document.body.classList.contains("light-mode"));
 		});
+
+		const closeSecretOverlay = () => {
+			window.clearTimeout(secretOverlayTimeout);
+			secretOverlay.hidden = true;
+			secretOverlay.classList.remove("is-active");
+			previouslyFocusedElement?.focus();
+		};
+
+		const showSecretOverlay = () => {
+			previouslyFocusedElement = document.activeElement;
+			secretOverlay.hidden = false;
+			secretOverlay.classList.remove("is-active");
+			requestAnimationFrame(() => secretOverlay.classList.add("is-active"));
+			secretClose.focus();
+			window.clearTimeout(secretOverlayTimeout);
+			secretOverlayTimeout = window.setTimeout(closeSecretOverlay, 7000);
+		};
+
+		document.addEventListener("keydown", (event) => {
+			if (!secretOverlay.hidden) {
+				if (event.key === "Escape") closeSecretOverlay();
+				if (event.key === "Tab") {
+					event.preventDefault();
+					secretClose.focus();
+				}
+				return;
+			}
+
+			if (event.ctrlKey || event.altKey || event.metaKey || event.repeat) return;
+			if (event.target instanceof HTMLElement && (event.target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(event.target.tagName))) {
+				secretSequencePosition = 0;
+				return;
+			}
+
+			const key = event.key.toLowerCase();
+			secretSequencePosition = key === secretSequence[secretSequencePosition]
+				? secretSequencePosition + 1
+				: key === secretSequence[0] ? 1 : 0;
+
+			if (secretSequencePosition === secretSequence.length) {
+				secretSequencePosition = 0;
+				showSecretOverlay();
+			}
+		});
+
+		secretClose.addEventListener("click", closeSecretOverlay);
 
 		const profileObserver = new IntersectionObserver((entries, observer) => {
 			entries.forEach((entry) => {
