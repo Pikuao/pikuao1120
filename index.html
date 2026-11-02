@@ -35,7 +35,7 @@
 				radial-gradient(circle at 12% 18%, rgba(106, 190, 255, .24), transparent 20%),
 				radial-gradient(circle at 80% 70%, rgba(144, 247, 202, .18), transparent 26%),
 				radial-gradient(circle at 50% 24%, rgba(137, 97, 255, .2), transparent 24%),
-				ranial-gradient(circle at 50% 50%, rgba(255,255,255,.035), transparent 48%),
+				radial-gradient(circle at 50% 50%, rgba(255,255,255,.035), transparent 48%),
 				linear-gradient(145deg, rgba(2, 5, 10, .96), rgba(9, 16, 24, .82) 36%, rgba(15, 20, 28, .94));
 			background-attachment: fixed;
 			color: var(--text);
@@ -199,7 +199,7 @@
 		.scroll-hint {
 			display: block;
 			margin-top: 42px;
-			color: var(--accent);
+			color: #fff;
 			font-size: .68rem;
 			font-weight: 700;
 			letter-spacing: .28em;
@@ -277,7 +277,7 @@
 			min-height: 220px;
 			padding: 34px 40px;
 			border: 1px solid rgba(255, 255, 255, .15);
-			border-radius: 30px;
+			border-radius: 50%;
 			background: rgba(17, 24, 35, .42);
 			backdrop-filter: blur(24px) saturate(1.4);
 			-webkit-backdrop-filter: blur(24px) saturate(1.4);
@@ -560,6 +560,376 @@
 			background: rgba(8, 12, 18, .22);
 			backdrop-filter: blur(8px);
 		}
+
+		:root {
+			--bg: #080d16;
+			--text: #e8f1ff;
+			--muted: #91a1b8;
+			--line: #70f4e3;
+			--panel: rgba(14, 24, 39, .82);
+			--accent: #70f4e3;
+			--accent-soft: rgba(112, 244, 227, .12);
+		}
+
+		body {
+			background-color: var(--bg);
+			background-image:
+				radial-gradient(ellipse at 50% 0%, rgba(35, 101, 139, .25), transparent 52%),
+				linear-gradient(145deg, #080d16, #0b1421 52%, #080d16);
+			background-attachment: fixed;
+		}
+
+		body.light-mode {
+			--bg: #f0f6fa;
+			--text: #102333;
+			--muted: #536a7b;
+			--line: #087f82;
+			--panel: rgba(255, 255, 255, .86);
+			--accent: #087f82;
+			--accent-soft: rgba(8, 127, 130, .1);
+			background-color: var(--bg);
+			background-image:
+				radial-gradient(ellipse at 50% 0%, rgba(95, 190, 205, .2), transparent 52%),
+				linear-gradient(145deg, #f8fbfd, #eaf3f7 52%, #f0f6fa);
+		}
+
+		.preference-controls { top: 18px; right: 22px; }
+
+		.preference-button {
+			border-color: rgba(112, 244, 227, .32);
+			background: rgba(8, 13, 22, .76);
+			box-shadow: 0 8px 28px rgba(0, 0, 0, .24), inset 0 0 18px rgba(112, 244, 227, .045);
+			font-family: "Consolas", "Yu Gothic", monospace;
+			letter-spacing: .03em;
+		}
+
+		body.light-mode .preference-button {
+			border-color: rgba(8, 127, 130, .3);
+			background: rgba(248, 252, 253, .86);
+		}
+
+		body.light-mode .preference-button[aria-pressed="true"] {
+			background: var(--accent);
+			color: #fff;
+		}
+
+		.preference-button:hover,
+		.preference-button:focus-visible {
+			box-shadow: 0 0 0 1px var(--accent), 0 0 24px var(--accent-soft);
+		}
+
+		.hero {
+			min-height: max(100svh, 680px);
+			padding-top: 80px;
+		}
+
+		.hero__content { width: min(100%, 820px); }
+
+		.hero__content::before {
+			display: block;
+			margin-bottom: 24px;
+			color: var(--accent);
+			content: "PERSONAL SITE  /  2026";
+			font-family: "Consolas", "Yu Gothic", monospace;
+			font-size: .75rem;
+			font-weight: 700;
+			letter-spacing: .24em;
+		}
+
+		.profile-icon-frame {
+			width: 152px;
+			height: 152px;
+			margin-bottom: 30px;
+			border-color: rgba(112, 244, 227, .55);
+			border-radius: 50%;
+			box-shadow: 0 0 0 8px rgba(112, 244, 227, .045), 0 0 48px rgba(112, 244, 227, .18), 0 24px 60px rgba(0, 0, 0, .38);
+		}
+
+		.profile-icon-frame img { border-radius: 50%; }
+
+		h1 {
+			background: linear-gradient(110deg, var(--text) 20%, var(--accent) 78%);
+			-webkit-background-clip: text;
+			background-clip: text;
+			color: transparent;
+			font-family: "Arial Black", "Consolas", "Yu Gothic", sans-serif;
+			font-size: clamp(4rem, 11vw, 7.5rem);
+			letter-spacing: -.045em;
+			text-shadow: none;
+		}
+
+		.tagline {
+			margin: 22px 0 34px;
+			font-weight: 500;
+			letter-spacing: .08em;
+		}
+
+		.scroll-hint {
+			width: fit-content;
+			margin: 0 auto;
+			padding: 10px 16px;
+			border: 1px solid rgba(112, 244, 227, .25);
+			border-radius: 4px;
+			background: var(--accent-soft);
+			font-family: "Consolas", "Yu Gothic", monospace;
+			letter-spacing: .18em;
+		}
+
+		.profile-section,
+		.link-section,
+		.mutual-section { padding-top: 100px; padding-bottom: 100px; }
+
+		.profile-section {
+			min-height: 82svh;
+			padding-top: 76px;
+			padding-bottom: 76px;
+		}
+
+		.profile-section__content { width: min(100%, 900px); }
+
+		.profile-section::before {
+			width: min(100% - 48px, 1100px);
+			background: linear-gradient(90deg, transparent, rgba(112, 244, 227, .6), transparent);
+		}
+
+		.profile-section h2,
+		.link-section h2,
+		.mutual-section h2 {
+			margin-bottom: 20px;
+			font-family: "Consolas", "Yu Gothic", sans-serif;
+			font-size: clamp(2.4rem, 5vw, 3.8rem);
+			letter-spacing: -.04em;
+		}
+
+		.profile-section h2::before,
+		.link-section h2::before,
+		.mutual-section h2::before {
+			display: block;
+			margin-bottom: 12px;
+			color: var(--accent);
+			font-family: "Consolas", "Yu Gothic", monospace;
+			font-size: .72rem;
+			font-weight: 700;
+			letter-spacing: .2em;
+		}
+
+		.profile-section h2::before { content: "01  /  ABOUT"; }
+		.link-section h2::before { content: "02  /  FIND ME"; }
+		.mutual-section h2::before { content: "03  /  FRIENDS"; }
+
+		.profile-section h2::after,
+		.link-section h2::after,
+		.mutual-section h2::after {
+			width: 48px;
+			height: 2px;
+			margin-top: 14px;
+			background: var(--accent);
+		}
+
+		.profile-grid { gap: 18px; margin-top: 32px; }
+
+		.profile-card {
+			position: relative;
+			min-height: 190px;
+			padding: 26px 30px;
+			overflow: hidden;
+			border: 1px solid rgba(112, 244, 227, .17);
+			border-radius: 18px;
+			background: linear-gradient(145deg, rgba(18, 31, 48, .92), rgba(11, 19, 31, .82));
+			box-shadow: 0 22px 54px rgba(0, 0, 0, .22), inset 0 1px 0 rgba(255, 255, 255, .04);
+		}
+
+		.profile-card::before {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 3px;
+			height: 100%;
+			background: linear-gradient(var(--accent), transparent);
+			content: "";
+		}
+
+		body.light-mode .profile-card {
+			border-color: rgba(8, 127, 130, .2);
+			background: linear-gradient(145deg, rgba(255, 255, 255, .96), rgba(232, 243, 247, .92));
+		}
+
+		.profile-card h3 {
+			margin-bottom: 16px;
+			font-size: 1.15rem;
+		}
+
+		.profile-card ul {
+			padding-left: 20px;
+			font-size: .95rem;
+			line-height: 1.9;
+		}
+
+		.profile-card:hover {
+			border-color: rgba(112, 244, 227, .56);
+			box-shadow: 0 24px 60px rgba(0, 0, 0, .28), 0 0 28px var(--accent-soft);
+		}
+
+		.link-grid {
+			grid-template-columns: 1fr;
+			gap: 14px;
+			margin-top: 42px;
+			width: min(100%, 700px);
+		}
+
+		.mutual-link-grid {
+			gap: 18px;
+			margin-top: 42px;
+		}
+
+		.link-card {
+			position: relative;
+			min-height: 88px;
+			overflow: hidden;
+			border: 1px solid rgba(112, 244, 227, .17);
+			border-radius: 14px;
+			background: linear-gradient(145deg, rgba(18, 31, 48, .9), rgba(11, 19, 31, .82));
+			box-shadow: 0 16px 38px rgba(0, 0, 0, .18), inset 0 1px 0 rgba(255, 255, 255, .04);
+			animation: none;
+		}
+
+		body.light-mode .link-card {
+			border-color: rgba(8, 127, 130, .2);
+			background: linear-gradient(145deg, rgba(255, 255, 255, .96), rgba(232, 243, 247, .9));
+		}
+
+		.link-section .link-card {
+			flex-direction: row;
+			justify-content: flex-start;
+			min-height: 82px;
+			padding: 18px 22px;
+			gap: 16px;
+			text-align: left;
+		}
+
+		.link-section .link-card .link-card__content {
+			align-items: flex-start;
+		}
+
+		.mutual-section .link-card {
+			min-height: 220px;
+			padding: 24px 20px;
+			gap: 16px;
+		}
+
+		.link-card__icon {
+			width: 76px;
+			height: 76px;
+			border-color: rgba(112, 244, 227, .3);
+			border-radius: 50%;
+		}
+
+		.link-card__content { flex: initial; }
+
+		.link-card__brand-icon {
+			display: grid;
+			flex: 0 0 48px;
+			width: 48px;
+			height: 48px;
+			place-items: center;
+			border-radius: 50%;
+			color: #fff;
+			font-family: Arial, sans-serif;
+			font-size: 1.35rem;
+			font-weight: 800;
+			line-height: 1;
+		}
+
+		.link-card__brand-icon svg {
+			display: block;
+			width: 25px;
+			height: 25px;
+			fill: currentColor;
+		}
+
+		.link-card__brand-icon--karotter img {
+			display: block;
+			width: 27px;
+			height: 27px;
+			filter: brightness(0) invert(1);
+		}
+
+		.link-card__brand-icon--discord { color: #fff; }
+
+		.link-card__brand-icon--instagram {
+			border-color: transparent;
+			background: transparent;
+			color: #fff;
+		}
+
+		.link-card__brand-icon--instagram svg {
+			fill: none;
+			stroke: currentColor;
+			stroke-width: 1.8;
+			stroke-linecap: round;
+			stroke-linejoin: round;
+		}
+
+		.link-card:hover,
+		.link-card:focus-visible {
+			border-color: var(--accent);
+			box-shadow: 0 18px 42px rgba(0, 0, 0, .24), 0 0 24px var(--accent-soft);
+			transform: translateY(-4px);
+		}
+
+		.disabled-link-card,
+		.disabled-link-card:hover,
+		.disabled-link-card:focus-visible {
+			border-style: dashed;
+			border-color: rgba(145, 161, 184, .28);
+			box-shadow: none;
+		}
+
+		.site-footer {
+			border-top-color: rgba(112, 244, 227, .16);
+			background: rgba(8, 13, 22, .52);
+			font-family: "Consolas", "Yu Gothic", monospace;
+			font-size: .78rem;
+		}
+
+		body.light-mode .site-footer {
+			border-top-color: rgba(8, 127, 130, .18);
+			background: rgba(240, 246, 250, .72);
+		}
+
+		@media (max-width: 760px) {
+			.mutual-link-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+			.mutual-section .link-card:last-child { grid-column: 1 / -1; min-height: 150px; }
+		}
+
+		@media (max-width: 620px) {
+			.preference-controls { top: 12px; right: 12px; }
+			.preference-button { min-height: 38px; padding: 7px 12px; font-size: .72rem; }
+			.hero { min-height: max(100svh, 620px); padding: 68px 20px 76px; }
+			.hero__content::before { margin-bottom: 20px; font-size: .64rem; letter-spacing: .16em; }
+			.profile-icon-frame { width: 132px; height: 132px; margin-bottom: 26px; border-radius: 50%; }
+			.profile-icon-frame img { border-radius: 50%; }
+			h1 { font-size: clamp(3.4rem, 15vw, 5rem); }
+			.tagline { margin: 20px 0 30px; font-size: 1rem; }
+			.profile-section,
+			.link-section,
+			.mutual-section { padding: 72px 20px; }
+			.profile-grid { grid-template-columns: 1fr; gap: 16px; margin-top: 32px; }
+			.profile-card { min-height: 0; padding: 26px 24px; }
+			.link-grid,
+			.mutual-link-grid { grid-template-columns: 1fr; gap: 12px; margin-top: 32px; width: 100%; }
+			.mutual-section .link-card,
+			.mutual-section .link-card:last-child { grid-column: auto; min-height: 190px; }
+			.link-section .link-card { min-height: 76px; padding: 16px 18px; }
+			.scroll-hint { margin-top: 0; font-size: .58rem; }
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			.profile-section__content:hover { transform: none; }
+			.profile-card:hover { transform: none; }
+			.link-card:hover,
+			.link-card:focus-visible { transform: none; }
+		}
 	</style>
 </head>
 <body>
@@ -605,10 +975,11 @@
 			<div class="link-section__content">
 				<h2 id="links-title">My link</h2>
 				<div class="link-grid">
-					<a class="link-card" href="https://x.com/pikuao2525" target="_blank" rel="noreferrer"><span class="link-label">X</span><span class="link-sub">@pikuao2525</span></a>
-					<a class="link-card" href="https://x.com/pikuao202608" target="_blank" rel="noreferrer"><span class="link-label">X（サブ垢）</span><span class="link-sub">@pikuao202608</span></a>
-					<a class="link-card" href="https://karotter.com/profile/pikuao202606?tab=recommended" target="_blank" rel="noreferrer"><span class="link-label">karotter</span><span class="link-sub">（あんまり動かしません）</span></a>
-					<div class="link-card disabled-link-card" aria-disabled="true" tabindex="-1" role="link" style="cursor: default; pointer-events: none; opacity: .9;"><span class="link-label">discord</span><span class="link-sub">@pikuao2525で追加してね！</span></div>
+					<a class="link-card" href="https://x.com/pikuao2525" target="_blank" rel="noreferrer"><span class="link-card__brand-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.847h-7.406l-5.8-7.584-6.64 7.584H.474l8.6-9.83L0 1.153h7.594l5.243 6.932zm-1.29 19.49h2.039L6.486 3.24H4.298z"/></svg></span><span class="link-card__content"><span class="link-label">X</span><span class="link-sub">@pikuao2525</span></span></a>
+					<a class="link-card" href="https://x.com/pikuao202608" target="_blank" rel="noreferrer"><span class="link-card__brand-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.847h-7.406l-5.8-7.584-6.64 7.584H.474l8.6-9.83L0 1.153h7.594l5.243 6.932zm-1.29 19.49h2.039L6.486 3.24H4.298z"/></svg></span><span class="link-card__content"><span class="link-label">X（サブ垢）</span><span class="link-sub">@pikuao202608</span></span></a>
+					<a class="link-card" href="https://karotter.com/profile/pikuao202606?tab=recommended" target="_blank" rel="noreferrer"><span class="link-card__brand-icon link-card__brand-icon--karotter" aria-hidden="true"><img src="https://karotter.com/brand-assets/logo/karotter-k.svg" alt=""></span><span class="link-card__content"><span class="link-label">karotter</span><span class="link-sub">（あんまり動かしません）</span></span></a>
+					<a class="link-card" href="https://www.instagram.com/pikuao2525/?hl=ja" target="_blank" rel="noreferrer"><span class="link-card__brand-icon link-card__brand-icon--instagram" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.8" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg></span><span class="link-card__content"><span class="link-label">Instagram</span><span class="link-sub">@pikuao2525</span></span></a>
+					<div class="link-card disabled-link-card" aria-disabled="true" tabindex="-1" role="link" style="cursor: default; pointer-events: none; opacity: .9;"><span class="link-card__brand-icon link-card__brand-icon--discord" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M19.7 5.3a18 18 0 0 0-4.4-1.4l-.6 1.2a16.7 16.7 0 0 0-5.4 0l-.6-1.2a18 18 0 0 0-4.4 1.4C1.5 9.4.7 13.4 1.1 17.4a18 18 0 0 0 5.4 2.7l1.2-2a11 11 0 0 1-1.9-.9l.5-.4a12.8 12.8 0 0 0 11.4 0l.5.4a11 11 0 0 1-1.9.9l1.2 2a18 18 0 0 0 5.4-2.7c.5-4.7-.8-8.6-3.2-12.1ZM8.7 14.8c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2Zm6.6 0c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2Z"/></svg></span><span class="link-card__content"><span class="link-label">discord</span><span class="link-sub">@pikuao2525で追加してね！</span></span></div>
 				</div>
 			</div>
 		</section>
@@ -617,9 +988,9 @@
 			<div class="mutual-section__content">
 				<h2 id="mutual-title">Mutual Links</h2>
 				<div class="mutual-link-grid">
-					<a class="link-card" href="https://linker.sakulab.net/" target="_blank" rel="noreferrer"><span class="link-card__icon"><img src="3.png" alt="Sakuのアイコン"></span><span class="link-card__content"><span class="link-label">Saku</span><span class="link-sub">ガジェットとWeb制作が好きの学生！</span></span></a>
+					<a class="link-card" href="https://linker.sakulab.net/" target="_blank" rel="noreferrer"><span class="link-card__icon"><img src="3.png" alt="Sakuのアイコン"></span><span class="link-card__content"><span class="link-label">Saku</span><span class="link-sub">ガジェットとWeb制作が好きな学生！</span></span></a>
 					<a class="link-card" href="https://tikuwa.me/" target="_blank" rel="noreferrer"><span class="link-card__icon"><img src="4.png" alt="ちくわの練り物のアイコン"></span><span class="link-card__content"><span class="link-label">ちくわの練り物</span><span class="link-sub">o((>ω< ))o</span></span></a>
-					<div class="link-card disabled-link-card" aria-disabled="true" tabindex="-1" role="note" style="cursor: default; pointer-events: none; opacity: .9;"><span class="link-card__content"><span class="link-label">Mutual Link</span><span class="link-sub">相互リンク募集中</span></span></div>
+					<div class="link-card disabled-link-card" aria-disabled="true" tabindex="-1" role="note" style="cursor: default; pointer-events: none; opacity: .9;"><span class="link-card__content"><span class="link-label">Mutual Link</span><span class="link-sub">相互リンク募集中！<br>XのDMに来てください！</span></span></div>
 				</div>
 			</div>
 		</section>
@@ -634,6 +1005,7 @@
 		const mutualContent = document.querySelector(".mutual-section__content");
 		const colorSchemeQuery = window.matchMedia("(prefers-color-scheme: light)");
 		let pointerFrame;
+		let hasUserThemePreference = false;
 
 		const applyTheme = (isLight) => {
 			document.body.classList.toggle("light-mode", isLight);
@@ -642,7 +1014,9 @@
 		};
 
 		applyTheme(colorSchemeQuery.matches);
-		colorSchemeQuery.addEventListener("change", (event) => applyTheme(event.matches));
+		colorSchemeQuery.addEventListener("change", (event) => {
+			if (!hasUserThemePreference) applyTheme(event.matches);
+		});
 
 		document.addEventListener("pointermove", (event) => {
 			if (pointerFrame) return;
@@ -654,6 +1028,7 @@
 		});
 
 		themeToggle.addEventListener("click", () => {
+			hasUserThemePreference = true;
 			applyTheme(!document.body.classList.contains("light-mode"));
 		});
 
