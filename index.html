@@ -98,6 +98,24 @@
 			color: var(--bg);
 		}
 
+		.share-status {
+			position: fixed;
+			top: 68px;
+			right: 22px;
+			z-index: 2;
+			margin: 0;
+			padding: 0;
+			border-radius: 8px;
+			background: var(--panel);
+			color: var(--text);
+			font-size: .8rem;
+		}
+
+		.share-status:not(:empty) {
+			padding: 9px 12px;
+			border: 1px solid var(--accent-soft);
+		}
+
 		body::before,
 		body::after {
 			position: fixed;
@@ -277,7 +295,7 @@
 			min-height: 220px;
 			padding: 34px 40px;
 			border: 1px solid rgba(255, 255, 255, .15);
-			border-radius: 50%;
+			border-radius: 18px;
 			background: rgba(17, 24, 35, .42);
 			backdrop-filter: blur(24px) saturate(1.4);
 			-webkit-backdrop-filter: blur(24px) saturate(1.4);
@@ -595,7 +613,10 @@
 
 		.preference-controls { top: 18px; right: 22px; }
 
-		.preference-button {
+		.preference-button,
+		.share-button {
+			flex-shrink: 0;
+			white-space: nowrap;
 			border-color: rgba(112, 244, 227, .32);
 			background: rgba(8, 13, 22, .76);
 			box-shadow: 0 8px 28px rgba(0, 0, 0, .24), inset 0 0 18px rgba(112, 244, 227, .045);
@@ -603,9 +624,44 @@
 			letter-spacing: .03em;
 		}
 
-		body.light-mode .preference-button {
+		.preference-button { min-width: max-content; }
+
+		.share-button {
+			display: grid;
+			width: 40px;
+			min-height: 40px;
+			padding: 8px;
+			place-items: center;
+			border: 1px solid rgba(255, 255, 255, .16);
+			border-radius: 999px;
+			color: var(--text);
+			font: inherit;
+			cursor: pointer;
+			transition: transform .2s ease, box-shadow .2s ease;
+		}
+
+		.share-button svg {
+			width: 19px;
+			height: 19px;
+			fill: none;
+			stroke: currentColor;
+			stroke-width: 1.8;
+			stroke-linecap: round;
+			stroke-linejoin: round;
+		}
+
+		body.light-mode .preference-button,
+		body.light-mode .share-button {
 			border-color: rgba(8, 127, 130, .3);
 			background: rgba(248, 252, 253, .86);
+		}
+
+		.share-button:hover,
+		.share-button:focus-visible {
+			transform: translateY(-2px);
+			box-shadow: 0 0 0 1px var(--accent), 0 0 24px var(--accent-soft);
+			outline: 2px solid var(--line);
+			outline-offset: 2px;
 		}
 
 		body.light-mode .preference-button[aria-pressed="true"] {
@@ -824,6 +880,16 @@
 			border-radius: 50%;
 		}
 
+		.link-card__icon--wide {
+			width: min(100%, 220px);
+			height: auto;
+			aspect-ratio: 1257 / 335;
+			border-color: transparent;
+			border-radius: 12px;
+			background: transparent;
+			box-shadow: none;
+		}
+
 		.link-card__content { flex: initial; }
 
 		.link-card__brand-icon {
@@ -870,6 +936,14 @@
 			stroke-linejoin: round;
 		}
 
+		body.light-mode .link-card__brand-icon {
+			color: #102333;
+		}
+
+		body.light-mode .link-card__brand-icon--karotter img {
+			filter: none;
+		}
+
 		.link-card:hover,
 		.link-card:focus-visible {
 			border-color: var(--accent);
@@ -904,7 +978,9 @@
 
 		@media (max-width: 620px) {
 			.preference-controls { top: 12px; right: 12px; }
-			.preference-button { min-height: 38px; padding: 7px 12px; font-size: .72rem; }
+			.preference-button,
+			.share-button { width: 38px; min-height: 38px; padding: 7px; }
+			.share-status { top: 58px; right: 12px; max-width: calc(100vw - 24px); }
 			.hero { min-height: max(100svh, 620px); padding: 68px 20px 76px; }
 			.hero__content::before { margin-bottom: 20px; font-size: .64rem; letter-spacing: .16em; }
 			.profile-icon-frame { width: 132px; height: 132px; margin-bottom: 26px; border-radius: 50%; }
@@ -1046,7 +1122,9 @@
 <body>
 	<div class="preference-controls" aria-label="表示設定">
 		<button class="preference-button" id="theme-toggle" type="button" aria-pressed="false">☀ ライトモード</button>
+		<button class="share-button" id="share-button" type="button" aria-label="ページを共有" title="ページを共有"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.7 10.6 6.6-4.2M8.7 13.4l6.6 4.2"/></svg></button>
 	</div>
+	<p class="share-status" id="share-status" role="status" aria-live="polite"></p>
 	<main>
 		<section class="hero" aria-labelledby="site-title">
 			<div class="hero__content">
@@ -1090,7 +1168,13 @@
 					<a class="link-card" href="https://x.com/pikuao202608" target="_blank" rel="noreferrer"><span class="link-card__brand-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.847h-7.406l-5.8-7.584-6.64 7.584H.474l8.6-9.83L0 1.153h7.594l5.243 6.932zm-1.29 19.49h2.039L6.486 3.24H4.298z"/></svg></span><span class="link-card__content"><span class="link-label">X（サブ垢）</span><span class="link-sub">@pikuao202608</span></span></a>
 					<a class="link-card" href="https://karotter.com/profile/pikuao202606?tab=recommended" target="_blank" rel="noreferrer"><span class="link-card__brand-icon link-card__brand-icon--karotter" aria-hidden="true"><img src="https://karotter.com/brand-assets/logo/karotter-k.svg" alt=""></span><span class="link-card__content"><span class="link-label">karotter</span><span class="link-sub">（あんまり動かしません）</span></span></a>
 					<a class="link-card" href="https://www.instagram.com/pikuao2525/?hl=ja" target="_blank" rel="noreferrer"><span class="link-card__brand-icon link-card__brand-icon--instagram" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.8" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg></span><span class="link-card__content"><span class="link-label">Instagram</span><span class="link-sub">@pikuao2525</span></span></a>
-					<div class="link-card disabled-link-card" aria-disabled="true" tabindex="-1" role="link" style="cursor: default; pointer-events: none; opacity: .9;"><span class="link-card__brand-icon link-card__brand-icon--discord" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M19.7 5.3a18 18 0 0 0-4.4-1.4l-.6 1.2a16.7 16.7 0 0 0-5.4 0l-.6-1.2a18 18 0 0 0-4.4 1.4C1.5 9.4.7 13.4 1.1 17.4a18 18 0 0 0 5.4 2.7l1.2-2a11 11 0 0 1-1.9-.9l.5-.4a12.8 12.8 0 0 0 11.4 0l.5.4a11 11 0 0 1-1.9.9l1.2 2a18 18 0 0 0 5.4-2.7c.5-4.7-.8-8.6-3.2-12.1ZM8.7 14.8c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2Zm6.6 0c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2Z"/></svg></span><span class="link-card__content"><span class="link-label">discord</span><span class="link-sub">@pikuao2525で追加してね！</span></span></div>
+					<div class="link-card">
+						<span class="link-card__brand-icon link-card__brand-icon--discord" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M19.7 5.3a18 18 0 0 0-4.4-1.4l-.6 1.2a16.7 16.7 0 0 0-5.4 0l-.6-1.2a18 18 0 0 0-4.4 1.4C1.5 9.4.7 13.4 1.1 17.4a18 18 0 0 0 5.4 2.7l1.2-2a11 11 0 0 1-1.9-.9l.5-.4a12.8 12.8 0 0 0 11.4 0l.5.4a11 11 0 0 1-1.9.9l1.2 2a18 18 0 0 0 5.4-2.7c.5-4.7-.8-8.6-3.2-12.1ZM8.7 14.8c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2Zm6.6 0c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2Z"/></svg></span>
+						<span class="link-card__content">
+							<span class="link-label">discord</span>
+							<span class="link-sub">@pikuao2525で追加してね！！</span>
+						</span>
+					</div>
 				</div>
 			</div>
 		</section>
@@ -1101,6 +1185,8 @@
 				<div class="mutual-link-grid">
 					<a class="link-card" href="https://link.sakudayo.com" target="_blank" rel="noreferrer"><span class="link-card__icon"><img src="3.png" alt="Sakuのアイコン"></span><span class="link-card__content"><span class="link-label">Saku</span><span class="link-sub">ガジェットとWeb制作が好きな学生！</span></span></a>
 					<a class="link-card" href="https://tikuwa.me/" target="_blank" rel="noreferrer"><span class="link-card__icon"><img src="4.png" alt="ちくわの練り物のアイコン"></span><span class="link-card__content"><span class="link-label">ちくわの練り物</span><span class="link-sub">o((>ω< ))o</span></span></a>
+					<a class="link-card" href="https://hikaproj.com/new/" target="_blank" rel="noreferrer"><span class="link-card__icon"><img src="5.png" alt="HIkaprojのアイコン"></span><span class="link-card__content"><span class="link-label">HIkaproj</span></span></a>
+					<a class="link-card" href="https://xp-zultra.github.io/" target="_blank" rel="noreferrer"><span class="link-card__icon link-card__icon--wide"><img src="6.png" alt="XP＠ニコニコeRのアイコン"></span><span class="link-card__content"><span class="link-label">XP＠ニコニコeR</span></span></a>
 					<div class="link-card disabled-link-card" aria-disabled="true" tabindex="-1" role="note" style="cursor: default; pointer-events: none; opacity: .9;"><span class="link-card__content"><span class="link-label">Mutual Link</span><span class="link-sub">相互リンク募集中！<br>XのDMに来てください！</span></span></div>
 				</div>
 			</div>
@@ -1119,6 +1205,8 @@
 	</div>
 	<script>
 		const themeToggle = document.querySelector("#theme-toggle");
+		const shareButton = document.querySelector("#share-button");
+		const shareStatus = document.querySelector("#share-status");
 		const profileContent = document.querySelector(".profile-section__content");
 		const linkContent = document.querySelector(".link-section__content");
 		const mutualContent = document.querySelector(".mutual-section__content");
@@ -1155,6 +1243,46 @@
 		themeToggle.addEventListener("click", () => {
 			hasUserThemePreference = true;
 			applyTheme(!document.body.classList.contains("light-mode"));
+		});
+
+		const copyPageUrl = async () => {
+			if (navigator.clipboard?.writeText) {
+				await navigator.clipboard.writeText(window.location.href);
+				return;
+			}
+
+			const temporaryInput = document.createElement("textarea");
+			temporaryInput.value = window.location.href;
+			temporaryInput.setAttribute("readonly", "");
+			temporaryInput.style.position = "fixed";
+			temporaryInput.style.opacity = "0";
+			document.body.append(temporaryInput);
+			temporaryInput.select();
+			const copied = document.execCommand("copy");
+			temporaryInput.remove();
+			if (!copied) throw new Error("URLをコピーできませんでした");
+		};
+
+		shareButton.addEventListener("click", async () => {
+			shareStatus.textContent = "";
+			try {
+				if (navigator.share) {
+					await navigator.share({
+						title: document.title,
+						text: "Pikuaoのホームページ",
+						url: window.location.href,
+					});
+					shareStatus.textContent = "共有しました";
+					return;
+				}
+
+				await copyPageUrl();
+				shareStatus.textContent = "ページURLをコピーしました";
+			} catch (error) {
+				if (error instanceof DOMException && error.name === "AbortError") return;
+				shareStatus.textContent = "共有できませんでした。もう一度お試しください";
+				console.error("ページの共有に失敗しました", error);
+			}
 		});
 
 		const closeSecretOverlay = () => {
