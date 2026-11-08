@@ -388,6 +388,15 @@
 			color: transparent;
 		}
 
+		body.light-mode .profile-section h2,
+		body.light-mode .link-section h2,
+		body.light-mode .mutual-section h2 {
+			background: linear-gradient(135deg, #10151f, #176b87 52%, #176b87 100%);
+			-webkit-background-clip: text;
+			background-clip: text;
+			color: transparent;
+		}
+
 		.link-section h2::after,
 		.mutual-section h2::after {
 			display: block;
@@ -397,15 +406,6 @@
 			border-radius: 999px;
 			background: linear-gradient(90deg, var(--accent), #a7f3d0);
 			content: "";
-		}
-
-		body.light-mode .profile-section h2,
-		body.light-mode .link-section h2,
-		body.light-mode .mutual-section h2 {
-			background: linear-gradient(135deg, #10151f, #176b87 52%, #176b87 100%);
-			-webkit-background-clip: text;
-			background-clip: text;
-			color: transparent;
 		}
 
 		.link-grid {
@@ -515,6 +515,7 @@
 		.disabled-link-card {
 			filter: saturate(.8);
 			opacity: .9;
+			cursor: default;
 		}
 
 		.disabled-link-card:hover,
@@ -625,6 +626,20 @@
 		}
 
 		.preference-button { min-width: max-content; }
+
+		.color-vision-toggle {
+			display: grid;
+			width: 40px;
+			min-width: 40px;
+			padding: 8px;
+			place-items: center;
+		}
+
+		.color-vision-toggle svg {
+			display: block;
+			width: 20px;
+			height: 20px;
+		}
 
 		.share-button {
 			display: grid;
@@ -842,16 +857,32 @@
 			position: relative;
 			min-height: 88px;
 			overflow: hidden;
-			border: 1px solid rgba(112, 244, 227, .17);
-			border-radius: 14px;
-			background: linear-gradient(145deg, rgba(18, 31, 48, .9), rgba(11, 19, 31, .82));
-			box-shadow: 0 16px 38px rgba(0, 0, 0, .18), inset 0 1px 0 rgba(255, 255, 255, .04);
+			border: 1px solid rgba(148, 173, 204, .2);
+			border-radius: 18px;
+			background: linear-gradient(135deg, rgba(23, 34, 51, .96), rgba(8, 13, 23, .94));
+			box-shadow: 0 18px 42px rgba(0, 0, 0, .24), inset 0 1px 0 rgba(255, 255, 255, .07);
 			animation: none;
 		}
 
+		.link-card::before {
+			position: absolute;
+			top: 0;
+			right: 20px;
+			left: 20px;
+			height: 1px;
+			background: linear-gradient(90deg, transparent, rgba(139, 233, 253, .58), transparent);
+			content: "";
+			pointer-events: none;
+		}
+
 		body.light-mode .link-card {
-			border-color: rgba(8, 127, 130, .2);
-			background: linear-gradient(145deg, rgba(255, 255, 255, .96), rgba(232, 243, 247, .9));
+			border-color: rgba(42, 87, 116, .2);
+			background: linear-gradient(135deg, rgba(255, 255, 255, .98), rgba(229, 239, 247, .96));
+			box-shadow: 0 16px 36px rgba(31, 54, 74, .1), inset 0 1px 0 rgba(255, 255, 255, .9);
+		}
+
+		body.light-mode .link-card::before {
+			background: linear-gradient(90deg, transparent, rgba(23, 107, 135, .42), transparent);
 		}
 
 		.link-section .link-card {
@@ -899,6 +930,8 @@
 			height: 48px;
 			place-items: center;
 			border-radius: 50%;
+			border: 1px solid rgba(191, 211, 235, .14);
+			background: linear-gradient(145deg, rgba(255, 255, 255, .1), rgba(255, 255, 255, .025));
 			color: #fff;
 			font-family: Arial, sans-serif;
 			font-size: 1.35rem;
@@ -937,6 +970,8 @@
 		}
 
 		body.light-mode .link-card__brand-icon {
+			border-color: rgba(23, 73, 101, .12);
+			background: linear-gradient(145deg, rgba(23, 107, 135, .1), rgba(23, 107, 135, .035));
 			color: #102333;
 		}
 
@@ -946,9 +981,14 @@
 
 		.link-card:hover,
 		.link-card:focus-visible {
-			border-color: var(--accent);
-			box-shadow: 0 18px 42px rgba(0, 0, 0, .24), 0 0 24px var(--accent-soft);
-			transform: translateY(-4px);
+			border-color: rgba(139, 233, 253, .62);
+			box-shadow: 0 22px 48px rgba(0, 0, 0, .3), 0 0 28px rgba(139, 233, 253, .12), inset 0 1px 0 rgba(255, 255, 255, .08);
+			transform: translateY(-5px);
+		}
+
+		body.light-mode .link-card:hover {
+			border-color: rgba(23, 107, 135, .48);
+			box-shadow: 0 20px 42px rgba(31, 54, 74, .15), 0 0 24px rgba(23, 107, 135, .1);
 		}
 
 		.disabled-link-card,
@@ -959,11 +999,127 @@
 			box-shadow: none;
 		}
 
+		.disabled-link-card::before { opacity: .2; }
+
 		.site-footer {
 			border-top-color: rgba(112, 244, 227, .16);
 			background: rgba(8, 13, 22, .52);
 			font-family: "Consolas", "Yu Gothic", monospace;
 			font-size: .78rem;
+		}
+
+		body.color-vision-mode {
+			--muted: #e5e9ef;
+			--accent: #ffda44;
+			--accent-soft: rgba(255, 218, 68, .2);
+			--line: #f8fafc;
+			--panel: #111821;
+			background: #070b12;
+		}
+
+		body.light-mode.color-vision-mode {
+			--text: #10151f;
+			--muted: #27313d;
+			--accent: #005a9c;
+			--accent-soft: rgba(0, 90, 156, .14);
+			--line: #10151f;
+			--panel: #fff;
+			background: #f7f9fc;
+		}
+
+		body.color-vision-mode h1,
+		body.color-vision-mode .profile-section h2,
+		body.color-vision-mode .link-section h2,
+		body.color-vision-mode .mutual-section h2,
+		body.light-mode.color-vision-mode h1,
+		body.light-mode.color-vision-mode .profile-section h2,
+		body.light-mode.color-vision-mode .link-section h2,
+		body.light-mode.color-vision-mode .mutual-section h2 {
+			background: none;
+			color: var(--text);
+			-webkit-text-fill-color: var(--text);
+		}
+
+		body.color-vision-mode .profile-card,
+		body.color-vision-mode .link-card {
+			border: 2px solid var(--text);
+			background: #111821;
+			box-shadow: none;
+			backdrop-filter: none;
+			-webkit-backdrop-filter: none;
+		}
+
+		body.light-mode.color-vision-mode .profile-card,
+		body.light-mode.color-vision-mode .link-card {
+			background: #fff;
+		}
+
+		body.color-vision-mode .profile-card::before,
+		body.color-vision-mode .profile-section h2::after,
+		body.color-vision-mode .link-section h2::after,
+		body.color-vision-mode .mutual-section h2::after {
+			background: var(--accent);
+		}
+
+		body.color-vision-mode .link-card__icon,
+		body.color-vision-mode .link-card__brand-icon {
+			border: 2px solid var(--text);
+			background: transparent;
+			box-shadow: none;
+		}
+
+		body.color-vision-mode a.link-card::after {
+			position: absolute;
+			top: 12px;
+			right: 14px;
+			display: grid;
+			width: 1.6rem;
+			height: 1.6rem;
+			place-items: center;
+			border: 2px solid currentColor;
+			border-radius: 50%;
+			color: var(--text);
+			content: "↗";
+			font-size: 1rem;
+			font-weight: 700;
+		}
+
+		body.color-vision-mode .link-card:hover,
+		body.color-vision-mode .link-card:focus-visible,
+		body.color-vision-mode .profile-card:hover {
+			border-color: var(--text);
+			box-shadow: 0 0 0 3px var(--accent);
+		}
+
+		body.color-vision-mode .link-card:focus-visible,
+		body.color-vision-mode .preference-button:focus-visible,
+		body.color-vision-mode .share-button:focus-visible {
+			outline: 3px solid var(--text);
+			outline-offset: 4px;
+		}
+
+		body.color-vision-mode .preference-button,
+		body.color-vision-mode .share-button {
+			border: 2px solid var(--text);
+			background: var(--bg);
+			color: var(--text);
+			backdrop-filter: none;
+			-webkit-backdrop-filter: none;
+		}
+
+		body.color-vision-mode .color-vision-toggle[aria-pressed="true"] {
+			background: #ffda44;
+			color: #10151f;
+		}
+
+		body.light-mode.color-vision-mode .color-vision-toggle[aria-pressed="true"] {
+			background: #005a9c;
+			color: #fff;
+		}
+
+		body.color-vision-mode .disabled-link-card {
+			filter: none;
+			opacity: 1;
 		}
 
 		body.light-mode .site-footer {
@@ -980,6 +1136,7 @@
 			.preference-controls { top: 12px; right: 12px; }
 			.preference-button,
 			.share-button { width: 38px; min-height: 38px; padding: 7px; }
+			.color-vision-toggle { width: 38px; min-width: 38px; }
 			.share-status { top: 58px; right: 12px; max-width: calc(100vw - 24px); }
 			.hero { min-height: max(100svh, 620px); padding: 68px 20px 76px; }
 			.hero__content::before { margin-bottom: 20px; font-size: .64rem; letter-spacing: .16em; }
@@ -1005,6 +1162,16 @@
 			.profile-card:hover { transform: none; }
 			.link-card:hover,
 			.link-card:focus-visible { transform: none; }
+		}
+
+		@media (prefers-contrast: more) {
+			.profile-card,
+			.link-card {
+				border-width: 2px;
+				border-color: var(--text);
+			}
+
+			.link-card__icon { border-width: 2px; }
 		}
 
 		.secret-overlay[hidden] { display: none; }
@@ -1122,6 +1289,7 @@
 <body>
 	<div class="preference-controls" aria-label="表示設定">
 		<button class="preference-button" id="theme-toggle" type="button" aria-pressed="false">☀ ライトモード</button>
+		<button class="preference-button color-vision-toggle" id="color-vision-toggle" type="button" aria-pressed="false" aria-label="色の見え方に配慮した配色に切り替え" title="Color vision support"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3a9 9 0 0 1 0 18V3Z" fill="currentColor"/></svg></button>
 		<button class="share-button" id="share-button" type="button" aria-label="ページを共有" title="ページを共有"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.7 10.6 6.6-4.2M8.7 13.4l6.6 4.2"/></svg></button>
 	</div>
 	<p class="share-status" id="share-status" role="status" aria-live="polite"></p>
@@ -1187,7 +1355,7 @@
 					<a class="link-card" href="https://tikuwa.me/" target="_blank" rel="noreferrer"><span class="link-card__icon"><img src="4.png" alt="ちくわの練り物のアイコン"></span><span class="link-card__content"><span class="link-label">ちくわの練り物</span><span class="link-sub">o((>ω< ))o</span></span></a>
 					<a class="link-card" href="https://hikaproj.com/new/" target="_blank" rel="noreferrer"><span class="link-card__icon"><img src="5.png" alt="HIkaprojのアイコン"></span><span class="link-card__content"><span class="link-label">HIkaproj</span></span></a>
 					<a class="link-card" href="https://xp-zultra.github.io/" target="_blank" rel="noreferrer"><span class="link-card__icon link-card__icon--wide"><img src="6.png" alt="XP＠ニコニコeRのアイコン"></span><span class="link-card__content"><span class="link-label">XP＠ニコニコeR</span></span></a>
-					<div class="link-card disabled-link-card" aria-disabled="true" tabindex="-1" role="note" style="cursor: default; pointer-events: none; opacity: .9;"><span class="link-card__content"><span class="link-label">Mutual Link</span><span class="link-sub">相互リンク募集中！<br>XのDMに来てください！</span></span></div>
+					<div class="link-card disabled-link-card" aria-disabled="true" tabindex="-1" role="note" style="cursor: default; pointer-events: none;"><span class="link-card__content"><span class="link-label">Mutual Link</span><span class="link-sub">相互リンク募集中！<br>XのDMに来てください！</span></span></div>
 				</div>
 			</div>
 		</section>
@@ -1205,6 +1373,7 @@
 	</div>
 	<script>
 		const themeToggle = document.querySelector("#theme-toggle");
+		const colorVisionToggle = document.querySelector("#color-vision-toggle");
 		const shareButton = document.querySelector("#share-button");
 		const shareStatus = document.querySelector("#share-status");
 		const profileContent = document.querySelector(".profile-section__content");
@@ -1243,6 +1412,13 @@
 		themeToggle.addEventListener("click", () => {
 			hasUserThemePreference = true;
 			applyTheme(!document.body.classList.contains("light-mode"));
+		});
+
+		colorVisionToggle.addEventListener("click", () => {
+			const isEnabled = document.body.classList.toggle("color-vision-mode");
+			colorVisionToggle.setAttribute("aria-pressed", String(isEnabled));
+			const label = isEnabled ? "標準の配色に戻す" : "色の見え方に配慮した配色に切り替え";
+			colorVisionToggle.setAttribute("aria-label", label);
 		});
 
 		const copyPageUrl = async () => {
